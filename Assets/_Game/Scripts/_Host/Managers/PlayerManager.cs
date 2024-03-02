@@ -13,6 +13,25 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>
     public bool pullingData = true;
     [Range(0,39)] public int playerIndex;
 
+    [Header("Player Prefab Data")]
+    public GameObject prefabToInstance;
+    public Transform instanceTarget;
+    public List<PlayerPrefab> prefabs = new List<PlayerPrefab>();
+
+    public void OnPlayerHasValidated(PlayerObject pl)
+    {
+        players.Add(pl);
+        pendingPlayers.Remove(pl);
+        InitPlayerPrefab(pl);
+    }
+
+    public void InitPlayerPrefab(PlayerObject pl)
+    {
+        var ppObj = Instantiate(prefabToInstance, instanceTarget);
+        PlayerPrefab pp = ppObj.GetComponent<PlayerPrefab>();
+        pp.Init(pl);
+        prefabs.Add(pp);
+    }
 
     private PlayerObject _focusPlayer;
     public PlayerObject FocusPlayer
@@ -26,14 +45,9 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>
                 playerName = value.playerName;
                 twitchName = value.twitchName;
                 profileImage = value.profileImage;
-                flagForCondone = value.flagForCondone;
                 wasCorrect = value.wasCorrect;
-                eliminated = value.eliminated;
 
                 points = value.points;
-                totalCorrect = value.totalCorrect;
-                submission = value.submission;
-                submissionTime = value.submissionTime;
             }
             else
             {
@@ -104,9 +118,6 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>
     void SetDataBack()
     {
         FocusPlayer.points = points;
-        FocusPlayer.totalCorrect = totalCorrect;
-        FocusPlayer.submission = submission;
-        FocusPlayer.submissionTime = submissionTime;
         pullingData = true;
     }
 }

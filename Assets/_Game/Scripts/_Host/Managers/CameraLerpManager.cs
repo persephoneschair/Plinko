@@ -7,10 +7,11 @@ public class CameraLerpManager : SingletonMonoBehaviour<CameraLerpManager>
 {
     private Camera cam;
 
-    public enum CameraPosition { Default };
+    public enum CameraPosition { Machine, Result, Question };
     public Transform[] angles;
-    public float defaultFieldOfView = 60f;
-    public float defaultTransitionDuration = 2f;
+    public float defaultFieldOfView = 69f;
+    public float defaultTransitionDuration = 0.75f;
+    public CameraPosition currentPosition = CameraPosition.Question;
 
     private float elapsedTime;
     private Vector3 startPos;
@@ -33,6 +34,36 @@ public class CameraLerpManager : SingletonMonoBehaviour<CameraLerpManager>
 
     #region Public Functions
 
+    [Button]
+    public void ToggleMachineAndResult()
+    {
+        if (currentPosition == CameraPosition.Machine)
+        {
+            ZoomToPosition(CameraPosition.Result);
+            currentPosition = CameraPosition.Result;
+        }
+        else if(currentPosition == CameraPosition.Result)
+        {
+            ZoomToPosition(CameraPosition.Machine);
+            currentPosition = CameraPosition.Machine;
+        }            
+    }
+
+    [Button]
+    public void ToggleMachineAndLobby()
+    {
+        if (currentPosition == CameraPosition.Machine || currentPosition == CameraPosition.Result)
+        {
+            ZoomToPosition(CameraPosition.Question, defaultFieldOfView, 2f);
+            currentPosition = CameraPosition.Question;
+        }
+        else if (currentPosition == CameraPosition.Question)
+        {
+            ZoomToPosition(CameraPosition.Machine, defaultFieldOfView, 2f);
+            currentPosition = CameraPosition.Machine;
+        }
+    }
+
     public void ZoomToPosition(CameraPosition target, float fov, float transitionDuration)
     {
         if (isMoving)
@@ -54,12 +85,12 @@ public class CameraLerpManager : SingletonMonoBehaviour<CameraLerpManager>
 
     public void ZoomToPosition(CameraPosition target, float fov)
     {
-        ZoomToPosition(target, defaultTransitionDuration, fov);
+        ZoomToPosition(target, fov, defaultTransitionDuration);
     }
 
     public void ZoomToPosition(CameraPosition target)
     {
-        ZoomToPosition(target, defaultTransitionDuration, defaultFieldOfView);
+        ZoomToPosition(target, defaultFieldOfView, defaultTransitionDuration);
     }
 
     #endregion

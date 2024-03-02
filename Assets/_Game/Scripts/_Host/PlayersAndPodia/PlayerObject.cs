@@ -13,19 +13,12 @@ public class PlayerObject
     public string otp;
     public string playerName;
 
-    public GlobalLeaderboardStrap strap;
-    public GlobalLeaderboardStrap cloneStrap;
+    public PlayerPrefab prefab;
 
     public string twitchName;
     public Texture profileImage;
 
-    public bool eliminated;
-
     public int points;
-    public int totalCorrect;
-    public string submission;
-    public float submissionTime;
-    public bool flagForCondone;
     public bool wasCorrect;
 
     public PlayerObject(Player pl, string name)
@@ -70,30 +63,14 @@ public class PlayerObject
         otp = "";
         twitchName = name.ToLowerInvariant();
         profileImage = tx;
-        //podium.avatarRend.material.mainTexture = profileImage;
-        if(!LobbyManager.Get.lateEntry)
-        {
-            //podium.InitialisePodium();
-        }
-        else
-        {
-            points = 0;
-            eliminated = true;
-        }
         HostManager.Get.SendPayloadToClient(this, EventLibrary.HostEventType.Validated, $"{playerName}|{points.ToString()}|{twitchName}");
-        PlayerManager.Get.players.Add(this);
-        PlayerManager.Get.pendingPlayers.Remove(this);
-        LeaderboardManager.Get.PlayerHasJoined(this);
+        PlayerManager.Get.OnPlayerHasValidated(this);
         SaveManager.BackUpData();
-        //HostManager.GetHost.UpdateLeaderboards();
     }
 
     public void HandlePlayerScoring(string[] submittedAnswers)
     {
-        switch(GameplayManager.Get.currentRound)
-        {
-            default:
-                break;
-        }
+        wasCorrect = Extensions.Spellchecker(submittedAnswers.FirstOrDefault(), GameplayManager.Get.CurrentQuestion.answer.Split(',').ToList());
+        prefab.SetBorderColor(PlayerPrefab.BorderColor.Answered);
     }
 }

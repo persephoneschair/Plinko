@@ -12,20 +12,15 @@ using TMPro;
 public class GameplayPennys : SingletonMonoBehaviour<GameplayPennys>
 {
     private PlayerShell playerList;
-    private MedalTableObject medalList;
-    private List<LeaderboardObject> leaderboardList;
     private readonly string path = @"D:\Unity Projects\HerokuPennyData\PennyStorage";
 
     public int authorPennys;
     [Range (1, 50)] public int multiplyFactor;
-    public string gameName;
 
     [Button]
     public void UpdatePennysAndMedals()
     {
         AwardPennys();
-        if(!string.IsNullOrEmpty(gameName))
-            AwardMedals();
         WriteNewFile();
     }
 
@@ -34,19 +29,9 @@ public class GameplayPennys : SingletonMonoBehaviour<GameplayPennys>
         playerList = JsonConvert.DeserializeObject<PlayerShell>(File.ReadAllText(path + @"\NewPennys.txt"));
     }
 
-    private void LoadMedalJSON()
-    {
-        medalList = JsonConvert.DeserializeObject<MedalTableObject>(File.ReadAllText(path + $@"\{gameName}.txt"));
-    }
-
-    private void LoadLeaderboardJSON()
-    {
-        leaderboardList = JsonConvert.DeserializeObject<List<LeaderboardObject>>(File.ReadAllText(path + $@"\{gameName}Leaderboard.txt"));
-    }
-
     private void AwardPennys()
     {
-        List<PlayerObject> list = PlayerManager.Get.players.OrderByDescending(p => p.totalCorrect).ThenBy(p => p.twitchName).Where(x => x.points > 0).ToList();
+        List<PlayerObject> list = PlayerManager.Get.players.OrderByDescending(p => p.points).ThenBy(p => p.twitchName).Where(x => x.points > 0).ToList();
         PlayerPennyData ppd;
 
         LoadJSON();
@@ -57,8 +42,8 @@ public class GameplayPennys : SingletonMonoBehaviour<GameplayPennys>
                 CreateNewPlayer(p);
             else
             {
-                ppd.CurrentSeasonPennys += (p.totalCorrect * multiplyFactor);
-                ppd.AllTimePennys += (p.totalCorrect * multiplyFactor);
+                ppd.CurrentSeasonPennys += (p.points * multiplyFactor);
+                ppd.AllTimePennys += (p.points * multiplyFactor);
             }
         }
 
@@ -74,29 +59,13 @@ public class GameplayPennys : SingletonMonoBehaviour<GameplayPennys>
         }
     }
 
-    private void AwardMedals()
-    {
-        List<PlayerObject> topTwo = PlayerManager.Get.players.Where(x => !x.eliminated).OrderByDescending(x => x.points).ToList();
-        LoadMedalJSON();
-
-        if(topTwo.Count == 2)
-        {
-            medalList.goldMedallists.Add(topTwo[0].twitchName.ToLowerInvariant());
-            medalList.silverMedallists.Add(topTwo[1].twitchName.ToLowerInvariant());
-        }
-
-        List<PlayerObject> lobbyOrdered = PlayerManager.Get.players.Where(x => x.eliminated).OrderByDescending(x => x.totalCorrect).ToList();
-        foreach(PlayerObject player in lobbyOrdered.Where(x => x.totalCorrect == lobbyOrdered[0].totalCorrect))
-            medalList.lobbyMedallists.Add(player.twitchName.ToLowerInvariant());
-    }
-
     private void CreateNewPlayer(PlayerObject p)
     {
         PlayerPennyData newP = new PlayerPennyData()
         {
             PlayerName = p.twitchName.ToLowerInvariant(),
-            CurrentSeasonPennys = (p.totalCorrect * multiplyFactor),
-            AllTimePennys = (p.totalCorrect * multiplyFactor)
+            CurrentSeasonPennys = (p.points * multiplyFactor),
+            AllTimePennys = (p.points * multiplyFactor)
         };
         playerList.playerList.Add(newP);
     }
@@ -116,16 +85,9 @@ public class GameplayPennys : SingletonMonoBehaviour<GameplayPennys>
     private void WriteNewFile()
     {
         string pennyPath = Operator.Get.testMode ? path + @"\NewPennysTest.txt" : path + @"\NewPennys.txt";
-        string medalPath = Operator.Get.testMode ? path + $@"\{gameName}Test.txt" : path + $@"\{gameName}.txt";
 
         string newDataContent = JsonConvert.SerializeObject(playerList, Formatting.Indented);
         File.WriteAllText(pennyPath, newDataContent);
-
-        if (!string.IsNullOrEmpty(gameName))
-        {
-            newDataContent = JsonConvert.SerializeObject(medalList, Formatting.Indented);
-            File.WriteAllText(medalPath, newDataContent);
-        }
 
         if (Operator.Get.testMode)
             DebugLog.Print("TEST DATA WRITTEN TO DRIVE", DebugLog.StyleOption.Bold, DebugLog.ColorOption.Orange);

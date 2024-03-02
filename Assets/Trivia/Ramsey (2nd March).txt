@@ -1,0 +1,45 @@
+{
+  "author": "ramseyfox",
+  "questions": [
+    {
+      "question": "What 5-letter word is used for a female fox?",
+      "answer": "Vixen"
+    },
+    {
+      "question": "What Scottish chef stars in the Fox cooking competition 'Hell's Kitchen'?",
+      "answer": "Gordon Ramsay,Ramsay"
+    },
+    {
+      "question": "What British author's works include 'Matilda', 'The BFG', and 'Fantastic Mr. Fox'?",
+      "answer": "Roald Dahl,Dahl"
+    },
+    {
+      "question": "What is the name of the masked fox thief in 'Dora the Explorer'?",
+      "answer": "Swiper"
+    },
+    {
+      "question": "What Greek storyteller is credited with authoring fables such as 'The Tortoise and the Hare', 'The Boy Who Cried Wolf', and 'The Fox and the Grapes'?",
+      "answer": "Aesop"
+    },
+    {
+      "question": "Special Agents Fox Mulder and Dana Scully were the protagonists of what landmark sci-fi television show?",
+      "answer": "The X-Files,The X Files,The XFiles,X-Files,X Files,XFiles"
+    },
+    {
+      "question": "Jamie Foxx voices the lead role of jazz musician Joe Gardner in what 2020 Disney-Pixar animated afterlife film?",
+      "answer": "Soul"
+    },
+    {
+      "question": "Vicente Fox was elected president of which country in the Americas in 2000?",
+      "answer": "Mexico"
+    },
+    {
+      "question": "What 5-letter word meaning 'to move in a stealthy or sneaky manner' is the collective noun for a group of foxes?",
+      "answer": "Skulk"
+    },
+    {
+      "question": "",
+      "answer": ""
+    }
+  ]
+}

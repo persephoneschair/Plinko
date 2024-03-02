@@ -23,7 +23,7 @@ public static class SaveManager
 
         GameplayDataSerializable gpd = new GameplayDataSerializable()
         {
-            nextQuestionNumber = GameplayManager.nextQuestionIndex,
+            //nextQuestionNumber = GameplayManager.nextQuestionIndex,
             currentRound = GameplayManager.Get.currentRound,
             roundsPlayed = GameplayManager.Get.roundsPlayed
         };
@@ -38,9 +38,7 @@ public static class SaveManager
         pl.playerName = playerObject.playerName;
         pl.playerClientID = playerObject.playerClientID;
         pl.twitchName = playerObject.twitchName;
-        pl.eliminated = playerObject.eliminated;
         pl.points = playerObject.points;
-        pl.totalCorrect = playerObject.totalCorrect;
         return pl;
     }
 
@@ -62,10 +60,8 @@ public static class SaveManager
         {
             po.playerName = rc.playerName;
             po.twitchName = rc.twitchName;
-            po.eliminated = rc.eliminated;
 
             po.points = rc.points;
-            po.totalCorrect = rc.totalCorrect;
         }
     }
 
@@ -82,7 +78,7 @@ public static class SaveManager
     {
         if(gameplayData != null)
         {
-            GameplayManager.nextQuestionIndex = gameplayData.nextQuestionNumber;
+            //GameplayManager.nextQuestionIndex = gameplayData.nextQuestionNumber;
             GameplayManager.Get.currentRound = gameplayData.currentRound;
             GameplayManager.Get.roundsPlayed = gameplayData.roundsPlayed;
         }
